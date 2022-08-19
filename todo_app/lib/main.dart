@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Todo application',
-      home: TaskPage(),
+      home: HomePage(),
     );
   }
 }
