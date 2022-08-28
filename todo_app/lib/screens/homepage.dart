@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/db_helper.dart';
 import 'package:todo_app/taskcard.dart';
 import 'package:todo_app/screens/taskpage.dart';
+
+import '../models/task.dart';
 class HomePage extends StatefulWidget {
 
   @override
@@ -8,6 +11,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  //DatabaseHelper _dbHelper = DatabaseHelper();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -45,14 +50,22 @@ class _HomePageState extends State<HomePage> {
                     height: 20.0,
                   ),
                   Expanded(
-                    child: ListView(
-                      children: [
-                        TaskCard(),
-                        TaskCard(),
-                        TaskCard(),
-                        TaskCard(),
-                      ],
-                    ),
+                    child: FutureBuilder(
+                      future: DataBaseHelper.instance.getTodos(),
+                      builder: (BuildContext context, AsyncSnapshot<List<Todo>>snapshot){
+                        if(snapshot.hasError){
+                          return Text('Error');
+                        }
+                        return snapshot.data!.isEmpty?Text('No data found'): ListView(
+                          children: snapshot.data!.map((Todo todo){
+                            return ListTile(
+                              title: Text(todo.title!),
+                              subtitle: Text(todo.description!),
+                            );
+                          }).toList(),
+                        );
+                      }
+                    )
                   ),
                 ],
               ),
